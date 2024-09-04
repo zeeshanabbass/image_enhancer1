@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Image Processing Tool</h1>
+
+    <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+    </form>
+
+    {% if filename %}
+    <h2>Uploaded Image:</h2>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
+        {% if processed_filename %}
+        <img src="{{ url_for('static', filename='processed/' + processed_filename) }}" alt="Processed Image">
+        {% endif %}
+    </div>
+
+    <h3>Processing Options:</h3>
+    <form action="{{ url_for('process_image') }}" method="post" class="processing-form">
+        <input type="hidden" name="filename" value="{{ filename }}">
+
+        <div class="options-container">
+            <label>
+                <input type="checkbox" name="remove_bg" value="1">
+                Remove Background (Transparent)
+            </label>
+            <label>
+                <input type="checkbox" name="remove_bg_2" value="1">
+                Remove Background (White)
+            </label>
+            <label for="bgcolor">Change Background Color:</label>
+            <input type="color" name="bgcolor" id="bgcolor" value="#0000ff">
+
+            <label>
+                <input type="checkbox" name="crop" value="1">
+                Crop to Passport Size
+            </label>
+            <label>
+                <input type="checkbox" name="increase-quality" value="1">
+                Enhance Image Quality
+            </label>
+        </div>
+
+        <button type="submit">Process Image</button>
+    </form>
+
+    {% endif %}
+
+    {% if processed_filename %}
+    <h2>Processed Image:</h2>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='processed/' + processed_filename) }}" alt="Processed Image">
+    </div>
+    <a href="{{ url_for('static', filename='processed/' + processed_filename) }}" download="processed_image.jpg">
+        Download Processed Image
+    </a>
+    {% endif %}
+</body>
+</html>
